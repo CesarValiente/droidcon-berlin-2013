@@ -11,9 +11,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
@@ -28,11 +30,13 @@ import com.spanisharmada.droidcon.R;
 
 public class SAScanListFragment extends Fragment {
 
+    private final String ACCEPTED_RPOFILE_NAME = "SA LOVE";
     private ListView mProfilesListView;
+    private Button mScanBtn;
 
     private AntPlusGeocachePcc mGeoPcc;
-    List<Map<String, String>> mDeviceListDisplay;
-    SimpleAdapter mAadapterDeviceListDisplay;
+    private List<Map<String, String>> mDeviceListDisplay;
+    private SimpleAdapter mAdapterDeviceListDisplay;
 
     private boolean mListInitComplete;
 
@@ -40,7 +44,6 @@ public class SAScanListFragment extends Fragment {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        init();
     }
 
     @Override
@@ -53,7 +56,24 @@ public class SAScanListFragment extends Fragment {
         mProfilesListView = (ListView) scanLayout
                 .findViewById(R.id.SA_scanListView);
 
+        mScanBtn = (Button) scanLayout.findViewById(R.id.SA_scanBtn);
+        mScanBtn.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(final View v) {
+                startScanProfiles();
+
+            }
+        });
+
         return scanLayout;
+    }
+
+    @Override
+    public void onActivityCreated(final Bundle savedInstanceState) {
+
+        super.onActivityCreated(savedInstanceState);
+        init();
     }
 
     @Override
@@ -70,27 +90,11 @@ public class SAScanListFragment extends Fragment {
      */
     private void init() {
 
-        mAadapterDeviceListDisplay = new SimpleAdapter(getActivity(),
-                mDeviceListDisplay, android.R.layout.simple_list_item_1,
-                new String[] { "title" }, new int[] { android.R.id.text1 });
+        // mAdapterDeviceListDisplay = new SimpleAdapter(getActivity(),
+        // mDeviceListDisplay, android.R.layout.simple_list_item_1,
+        // new String[] { "title" }, new int[] { android.R.id.text1 });
 
-        mProfilesListView.setAdapter(mAadapterDeviceListDisplay);
-    }
-
-    /**
-     * 
-     * @param view
-     */
-    private void clickBtns(final View view) {
-
-        switch (view.getId()) {
-
-            case R.id.SA_scanBtn:
-
-                break;
-            default:
-                break;
-        }
+        // mProfilesListView.setAdapter(mAdapterDeviceListDisplay);
     }
 
     /**
@@ -105,12 +109,12 @@ public class SAScanListFragment extends Fragment {
         }
 
         // Reset the device list display
-        mDeviceListDisplay.clear();
+        // mDeviceListDisplay.clear();
         HashMap<String, String> listItem = new HashMap<String, String>();
         listItem.put("title", "No Devices Found");
         listItem.put("desc", "No results received from plugin yet...");
-        mDeviceListDisplay.add(listItem);
-        mAadapterDeviceListDisplay.notifyDataSetChanged();
+        // mDeviceListDisplay.add(listItem);
+        // mAdapterDeviceListDisplay.notifyDataSetChanged();
         mListInitComplete = false;
 
         // Make the access request
@@ -124,10 +128,6 @@ public class SAScanListFragment extends Fragment {
                         switch (resultCode) {
                             case AntPluginMsgDefines.MSG_REQACC_RESULT_whatSUCCESS:
                                 mGeoPcc = result;
-                                // tv_status.setText(result.getDeviceName()
-                                // + ": "
-                                // + AntPlusGeocachePcc
-                                // .statusCodeToPrintableString(initialDeviceStateCode));
                                 mGeoPcc.requestCurrentDeviceList();
                                 // subscribeToEvents();
                                 break;
@@ -218,39 +218,46 @@ public class SAScanListFragment extends Fragment {
                     public void onNewAvailableDeviceList(final int[] deviceIDs,
                             final String[] deviceIdentifierStrings,
                             final int changeCode, final int changingDeviceID) {
-                        mDeviceListDisplay.clear();
+                        // mDeviceListDisplay.clear();
 
                         if (deviceIDs.length != 0) {
                             for (int i = 0; i < deviceIDs.length; ++i) {
-                                if (deviceIdentifierStrings[i].trim().length() == 0) {
-                                    deviceIdentifierStrings[i] = "<Unprogrammed>";
-                                } else if (deviceIdentifierStrings[i]
-                                        .contentEquals("_________")) {
-                                    deviceIdentifierStrings[i] = "<Invalid>";
-                                }
+                                // if
+                                // (deviceIdentifierStrings[i].trim().length()
+                                // == 0) {
+                                // deviceIdentifierStrings[i] =
+                                // "<Unprogrammed>";
+                                // } else if (deviceIdentifierStrings[i]
+                                // .contentEquals("_________")) {
+                                // deviceIdentifierStrings[i] = "<Invalid>";
+                                // }
+                                //
+                                // HashMap<String, String> listItem = new
+                                // HashMap<String, String>();
+                                // listItem.put("title",
+                                // deviceIdentifierStrings[i]);
+                                // listItem.put("desc",
+                                // Integer.toString(deviceIDs[i]));
+                                //
+                                // mDeviceListDisplay.add(listItem);
 
-                                HashMap<String, String> listItem = new HashMap<String, String>();
-                                listItem.put("title",
-                                        deviceIdentifierStrings[i]);
-                                listItem.put("desc",
-                                        Integer.toString(deviceIDs[i]));
+                                Log.d("", "Item: " + deviceIDs[i]);
 
-                                mDeviceListDisplay.add(listItem);
                             }
                         } else {
                             HashMap<String, String> listItem = new HashMap<String, String>();
                             listItem.put("title", "No Devices Found");
                             listItem.put("desc",
                                     "No geocaches sensors detected in range yet...");
-                            mDeviceListDisplay.add(listItem);
+                            // mDeviceListDisplay.add(listItem);
                         }
 
                         getActivity().runOnUiThread(new Runnable() {
 
                             @Override
                             public void run() {
-                                mAadapterDeviceListDisplay
-                                        .notifyDataSetChanged();
+                                // mAdapterDeviceListDisplay
+                                // .notifyDataSetChanged();
                             }
                         });
 
