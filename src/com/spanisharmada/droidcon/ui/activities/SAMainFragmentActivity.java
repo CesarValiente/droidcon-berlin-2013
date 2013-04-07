@@ -6,18 +6,18 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.spanisharmada.droidcon.R;
-import com.spanisharmada.droidcon.ui.fragments.SAScanListFragment;
+import com.spanisharmada.droidcon.ui.fragments.SAScanFragment;
 
 public class SAMainFragmentActivity extends FragmentActivity {
 
-    private SAScanListFragment mScanListFragment;
+    private SAScanFragment mScanListFragment;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_fragment_activity);
 
-        mScanListFragment = new SAScanListFragment();
+        mScanListFragment = new SAScanFragment();
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction();
         transaction.add(R.id.SA_fragment_place, mScanListFragment);

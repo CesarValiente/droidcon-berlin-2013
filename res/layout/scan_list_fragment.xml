@@ -2,13 +2,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:orientation="vertical" >
 
-    <ListView
-        android:id="@+id/SA_scanListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/SA_scanBtn" />
+    <ImageView
+        android:id="@+id/SA_logoImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/logo" />
 
     <ImageView
         android:id="@+id/SA_heartImage"

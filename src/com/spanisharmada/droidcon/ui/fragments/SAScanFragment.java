@@ -1,8 +1,6 @@
 package com.spanisharmada.droidcon.ui.fragments;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -17,9 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.dsi.ant.plugins.AntPluginMsgDefines;
@@ -34,27 +30,17 @@ import com.spanisharmada.droidcon.R;
 import com.spanisharmada.droidcon.data.model.SAProfileData;
 import com.spanisharmada.droidcon.ui.activities.SAProfileDetailsActivity;
 
-public class SAScanListFragment extends Fragment {
+public class SAScanFragment extends Fragment {
 
     private final String LOG_CLASS = getClass().getSimpleName();
-
     private final String ACCEPTED_RPOFILE_NAME = "SALOVE";
 
+    private int mDeviceID;
+
     private ImageView mHeartImage;
-
-    private GeocacheDeviceData mData1;
-    private GeocacheDeviceData mData2;
-
-    private int deviceID;
-
-    private ListView mProfilesListView;
     private Button mScanBtn;
 
     private AntPlusGeocachePcc mGeoPcc;
-    private List<Map<String, String>> mDeviceListDisplay;
-    private SimpleAdapter mAdapterDeviceListDisplay;
-
-    private boolean mListInitComplete;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -68,9 +54,6 @@ public class SAScanListFragment extends Fragment {
 
         RelativeLayout scanLayout = (RelativeLayout) inflater.inflate(
                 R.layout.scan_list_fragment, container, false);
-
-        mProfilesListView = (ListView) scanLayout
-                .findViewById(R.id.SA_scanListView);
 
         mHeartImage = (ImageView) scanLayout.findViewById(R.id.SA_heartImage);
         mScanBtn = (Button) scanLayout.findViewById(R.id.SA_scanBtn);
@@ -122,7 +105,7 @@ public class SAScanListFragment extends Fragment {
 
     public void heartPressed() {
 
-        boolean reqSubmitted = mGeoPcc.requestDeviceData(deviceID, true,
+        boolean reqSubmitted = mGeoPcc.requestDeviceData(mDeviceID, true,
 
         // Display the results if
         // successful or report
@@ -176,9 +159,6 @@ public class SAScanListFragment extends Fragment {
         HashMap<String, String> listItem = new HashMap<String, String>();
         listItem.put("title", "No Devices Found");
         listItem.put("desc", "No results received from plugin yet...");
-        // mDeviceListDisplay.add(listItem);
-        // mAdapterDeviceListDisplay.notifyDataSetChanged();
-        mListInitComplete = false;
 
         // Make the access request
         AntPlusGeocachePcc.requestListAndRequestAccess(getActivity(),
@@ -290,7 +270,7 @@ public class SAScanListFragment extends Fragment {
 
                                 if (deviceIdentifierStrings[i]
                                         .contains(ACCEPTED_RPOFILE_NAME)) {
-                                    deviceID = deviceIDs[i];
+                                    mDeviceID = deviceIDs[i];
 
                                     getActivity().runOnUiThread(new Runnable() {
                                         @Override
@@ -323,13 +303,5 @@ public class SAScanListFragment extends Fragment {
 
                     }
                 });
-    }
-
-    private void showDeviceInfo() {
-
-        if (mData1 != null) {
-
-        }
-
     }
 }
