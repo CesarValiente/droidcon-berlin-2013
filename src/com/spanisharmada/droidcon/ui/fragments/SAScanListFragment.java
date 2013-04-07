@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
@@ -25,12 +26,27 @@ import com.dsi.ant.plugins.AntPluginMsgDefines;
 import com.dsi.ant.plugins.AntPluginPcc.IDeviceStateChangeReceiver;
 import com.dsi.ant.plugins.AntPluginPcc.IPluginAccessResultReceiver;
 import com.dsi.ant.plugins.antplus.pcc.AntPlusGeocachePcc;
+import com.dsi.ant.plugins.antplus.pcc.AntPlusGeocachePcc.GeocacheDeviceData;
 import com.dsi.ant.plugins.antplus.pcc.AntPlusGeocachePcc.IAvailableDeviceListReceiver;
+import com.dsi.ant.plugins.antplus.pcc.AntPlusGeocachePcc.IDataDownloadFinishedReceiver;
+import com.dsi.ant.plugins.antplus.pcc.AntPlusGeocachePcc.RequestStatusCode;
 import com.spanisharmada.droidcon.R;
+import com.spanisharmada.droidcon.data.model.SAProfileData;
+import com.spanisharmada.droidcon.ui.activities.SAProfileDetailsActivity;
 
 public class SAScanListFragment extends Fragment {
 
-    private final String ACCEPTED_RPOFILE_NAME = "SA LOVE";
+    private final String LOG_CLASS = getClass().getSimpleName();
+
+    private final String ACCEPTED_RPOFILE_NAME = "SALOVE";
+
+    private ImageView mHeartImage;
+
+    private GeocacheDeviceData mData1;
+    private GeocacheDeviceData mData2;
+
+    private int deviceID;
+
     private ListView mProfilesListView;
     private Button mScanBtn;
 
@@ -56,6 +72,7 @@ public class SAScanListFragment extends Fragment {
         mProfilesListView = (ListView) scanLayout
                 .findViewById(R.id.SA_scanListView);
 
+        mHeartImage = (ImageView) scanLayout.findViewById(R.id.SA_heartImage);
         mScanBtn = (Button) scanLayout.findViewById(R.id.SA_scanBtn);
         mScanBtn.setOnClickListener(new android.view.View.OnClickListener() {
 
@@ -77,6 +94,12 @@ public class SAScanListFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mHeartImage.setVisibility(View.GONE);
+    }
+
+    @Override
     public void onDestroy() {
         if (mGeoPcc != null) {
             mGeoPcc.releaseAccess();
@@ -95,6 +118,46 @@ public class SAScanListFragment extends Fragment {
         // new String[] { "title" }, new int[] { android.R.id.text1 });
 
         // mProfilesListView.setAdapter(mAdapterDeviceListDisplay);
+    }
+
+    public void heartPressed() {
+
+        boolean reqSubmitted = mGeoPcc.requestDeviceData(deviceID, true,
+
+        // Display the results if
+        // successful or report
+        // failures to user
+                new IDataDownloadFinishedReceiver() {
+                    @Override
+                    public void onNewDataDownloadFinished(final int statusCode,
+                            final GeocacheDeviceData downloadedData) {
+                        StringBuilder error = new StringBuilder(
+                                "Error Downloading Data: ");
+
+                        switch (statusCode) {
+                            case RequestStatusCode.SUCCESS:
+                                Intent intent = new Intent(getActivity(),
+                                        SAProfileDetailsActivity.class);
+                                intent.putExtra(
+                                        SAProfileData.PROFILE_DATA_KEY,
+                                        downloadedData.programmableData.hintString);
+                                startActivity(intent);
+                                return;
+
+                            case RequestStatusCode.FAIL_DEVICE_NOT_IN_LIST:
+                                error.append("Device no longer in list");
+                                break;
+                            case RequestStatusCode.FAIL_ALREADY_BUSY_EXTERNAL:
+                                error.append("Device is busy");
+                                break;
+                            case RequestStatusCode.FAIL_DEVICE_COMMUNICATION_FAILURE:
+                                error.append("Communication with device failed");
+                                break;
+                        }
+
+                    }
+                }, null);
+
     }
 
     /**
@@ -222,26 +285,23 @@ public class SAScanListFragment extends Fragment {
 
                         if (deviceIDs.length != 0) {
                             for (int i = 0; i < deviceIDs.length; ++i) {
-                                // if
-                                // (deviceIdentifierStrings[i].trim().length()
-                                // == 0) {
-                                // deviceIdentifierStrings[i] =
-                                // "<Unprogrammed>";
-                                // } else if (deviceIdentifierStrings[i]
-                                // .contentEquals("_________")) {
-                                // deviceIdentifierStrings[i] = "<Invalid>";
-                                // }
-                                //
-                                // HashMap<String, String> listItem = new
-                                // HashMap<String, String>();
-                                // listItem.put("title",
-                                // deviceIdentifierStrings[i]);
-                                // listItem.put("desc",
-                                // Integer.toString(deviceIDs[i]));
-                                //
-                                // mDeviceListDisplay.add(listItem);
 
-                                Log.d("", "Item: " + deviceIDs[i]);
+                                Log.d(LOG_CLASS, "Item: " + deviceIDs[i]);
+
+                                if (deviceIdentifierStrings[i]
+                                        .contains(ACCEPTED_RPOFILE_NAME)) {
+                                    deviceID = deviceIDs[i];
+
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                            mHeartImage
+                                                    .setVisibility(View.VISIBLE);
+                                        }
+                                    });
+
+                                }
 
                             }
                         } else {
@@ -263,7 +323,13 @@ public class SAScanListFragment extends Fragment {
 
                     }
                 });
-
     }
 
+    private void showDeviceInfo() {
+
+        if (mData1 != null) {
+
+        }
+
+    }
 }

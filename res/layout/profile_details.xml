@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/SA_profileImage"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/darker_gray"
+        android:scaleType="centerCrop" />
+
+    <!-- Name -->
+
+    <TextView
+        android:id="@+id/SA_NameLabel"
+        style="@style/sa_profile_data_label"
+        android:layout_below="@id/SA_profileImage"
+        android:layout_marginTop="20dp"
+        android:text="Name:" />
+
+    <TextView
+        android:id="@+id/SA_NameData"
+        style="@style/sa_profile_data_content"
+        android:layout_alignBaseline="@id/SA_NameLabel"
+        android:layout_toRightOf="@id/SA_NameLabel"
+        android:text="Data Name" />
+
+    <!-- Sex -->
+
+    <TextView
+        android:id="@+id/SA_SexLabel"
+        style="@style/sa_profile_data_label"
+        android:layout_below="@id/SA_NameLabel"
+        android:text="Sex:" />
+
+    <TextView
+        android:id="@+id/SA_SexData"
+        style="@style/sa_profile_data_content"
+        android:layout_alignBaseline="@id/SA_SexLabel"
+        android:layout_toRightOf="@id/SA_SexLabel"
+        android:text="Sex data" />
+
+    <!-- Age -->
+
+    <TextView
+        android:id="@+id/SA_AgeLabel"
+        style="@style/sa_profile_data_label"
+        android:layout_below="@id/SA_SexLabel"
+        android:text="Age:" />
+
+    <TextView
+        android:id="@+id/SA_AgeData"
+        style="@style/sa_profile_data_content"
+        android:layout_alignBaseline="@id/SA_AgeLabel"
+        android:layout_toRightOf="@id/SA_AgeLabel"
+        android:text="Age data" />
+
+    <!-- Location -->
+
+    <TextView
+        android:id="@+id/SA_LocationLabel"
+        style="@style/sa_profile_data_label"
+        android:layout_below="@id/SA_AgeLabel"
+        android:text="Location:" />
+
+    <TextView
+        android:id="@+id/SA_LocationData"
+        style="@style/sa_profile_data_content"
+        android:layout_alignBaseline="@id/SA_LocationLabel"
+        android:layout_toRightOf="@id/SA_LocationLabel"
+        android:text="Location data" />
+
+    <!-- Interests -->
+
+    <TextView
+        android:id="@+id/SA_InterestsLabel"
+        style="@style/sa_profile_data_label"
+        android:layout_below="@id/SA_LocationLabel"
+        android:text="Interests:" />
+
+    <TextView
+        android:id="@+id/SA_InterestsData"
+        style="@style/sa_profile_data_content"
+        android:layout_alignBaseline="@id/SA_InterestsLabel"
+        android:layout_toRightOf="@id/SA_InterestsLabel"
+        android:text="Interests data" />
+
+</RelativeLayout>
