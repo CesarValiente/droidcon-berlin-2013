@@ -35,18 +35,25 @@ public class SAProfileDetailsActivity extends FragmentActivity {
         Intent intent = getIntent();
         if (intent != null) {
 
+            // This was the first approach
             // SAProfileData profileData = (SAProfileData) intent
             // .getParcelableExtra(SAProfileData.PROFILE_DATA_KEY);
-            //
             // fillProfileDetails(profileData);
 
+            // Finally to show in the demo we'll send the data
             String profileId = intent
                     .getStringExtra(SAProfileData.PROFILE_DATA_KEY);
             fillProfileDetails(profileId);
         }
-
     }
 
+    /**
+     * The idea was use this function with a {@link SAProfileData}, but finally
+     * regarding we didn't have to much time we didn't use this approach and
+     * simply hardcode the data
+     * 
+     * @param profileData
+     */
     private void fillProfileDetails(final SAProfileData profileData) {
 
         if (profileData != null) {

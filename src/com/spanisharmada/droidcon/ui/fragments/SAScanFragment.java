@@ -1,7 +1,5 @@
 package com.spanisharmada.droidcon.ui.fragments;
 
-import java.util.HashMap;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -71,9 +69,7 @@ public class SAScanFragment extends Fragment {
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
-
         super.onActivityCreated(savedInstanceState);
-        init();
     }
 
     @Override
@@ -92,31 +88,19 @@ public class SAScanFragment extends Fragment {
     }
 
     /**
-     * Initializes the stuff
+     * This is the final step, after we click on the heart image and go to the
+     * {@link SAProfileDetailsActivity}
      */
-    private void init() {
-
-        // mAdapterDeviceListDisplay = new SimpleAdapter(getActivity(),
-        // mDeviceListDisplay, android.R.layout.simple_list_item_1,
-        // new String[] { "title" }, new int[] { android.R.id.text1 });
-
-        // mProfilesListView.setAdapter(mAdapterDeviceListDisplay);
-    }
-
     public void heartPressed() {
 
-        boolean reqSubmitted = mGeoPcc.requestDeviceData(mDeviceID, true,
-
-        // Display the results if
-        // successful or report
-        // failures to user
+        mGeoPcc.requestDeviceData(mDeviceID, true,
+        // Display the results if successful or report failures to user
                 new IDataDownloadFinishedReceiver() {
                     @Override
                     public void onNewDataDownloadFinished(final int statusCode,
                             final GeocacheDeviceData downloadedData) {
                         StringBuilder error = new StringBuilder(
                                 "Error Downloading Data: ");
-
                         switch (statusCode) {
                             case RequestStatusCode.SUCCESS:
                                 Intent intent = new Intent(getActivity(),
@@ -126,7 +110,6 @@ public class SAScanFragment extends Fragment {
                                         downloadedData.programmableData.hintString);
                                 startActivity(intent);
                                 return;
-
                             case RequestStatusCode.FAIL_DEVICE_NOT_IN_LIST:
                                 error.append("Device no longer in list");
                                 break;
@@ -137,10 +120,8 @@ public class SAScanFragment extends Fragment {
                                 error.append("Communication with device failed");
                                 break;
                         }
-
                     }
                 }, null);
-
     }
 
     /**
@@ -148,17 +129,12 @@ public class SAScanFragment extends Fragment {
      * display data.
      */
     private void startScanProfiles() {
+
         // Release the old access if it exists
         if (mGeoPcc != null) {
             mGeoPcc.releaseAccess();
             mGeoPcc = null;
         }
-
-        // Reset the device list display
-        // mDeviceListDisplay.clear();
-        HashMap<String, String> listItem = new HashMap<String, String>();
-        listItem.put("title", "No Devices Found");
-        listItem.put("desc", "No results received from plugin yet...");
 
         // Make the access request
         AntPlusGeocachePcc.requestListAndRequestAccess(getActivity(),
@@ -256,7 +232,6 @@ public class SAScanFragment extends Fragment {
                 // Receives the device list updates and displays the current
                 // list
                 new IAvailableDeviceListReceiver() {
-
                     @Override
                     public void onNewAvailableDeviceList(final int[] deviceIDs,
                             final String[] deviceIdentifierStrings,
@@ -280,27 +255,9 @@ public class SAScanFragment extends Fragment {
                                                     .setVisibility(View.VISIBLE);
                                         }
                                     });
-
                                 }
-
                             }
-                        } else {
-                            HashMap<String, String> listItem = new HashMap<String, String>();
-                            listItem.put("title", "No Devices Found");
-                            listItem.put("desc",
-                                    "No geocaches sensors detected in range yet...");
-                            // mDeviceListDisplay.add(listItem);
                         }
-
-                        getActivity().runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                // mAdapterDeviceListDisplay
-                                // .notifyDataSetChanged();
-                            }
-                        });
-
                     }
                 });
     }
